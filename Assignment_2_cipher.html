@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8"/>
+<title>Assignment 2 - Cipher</title>
+<script src = "https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+<style>
+	body{
+		margin:auto;
+		text-align:center;
+		background-color: #f7d0f1;
+	}
+	p{
+	  font-size:18px;
+	  border: solid;
+	  margin:0 450px;
+	}
+    ul{
+       text-align:center;
+       margin:0 450px;
+    }
+    .input{
+           border: double;
+    }
+
+</style>
+</head>
+<script>
+		var alphabet = "abcdefghijklmnopqrstuvwxyz";
+		var fullAlphabet = alphabet + alphabet + alphabet;
+
+		function runCipher(){
+			var plainText = $('#plain').val();
+ 		   	var firstEncrypt = '';
+					//for Multiplicative Cipher
+				for(i = 0 ; i < plainText.length; i++){
+					var letter = plainText[i];
+					var upperLetter = (letter == letter.toUpperCase());
+					letter = letter.toLowerCase();
+		
+					var index = alphabet.indexOf(letter);
+					index = (index * 5) % alphabet.length;
+					var nextLetter = alphabet[index];
+					if(upperLetter)
+					nextLetter = nextLetter.toUpperCase();
+					firstEncrypt += nextLetter;
+				}
+			var secondEncrypt = '';
+			var finalEncrypt = '';
+
+  
+				//for rotation cipher
+  
+			function rot(s, i) {
+			return s.replace(/[a-zA-Z]/g, function (c) {
+				return String.fromCharCode((c <= 'Z' ? 90 : 122) >= (c = c.charCodeAt(0) + i) ? c : c - 26);
+			});
+			}
+	
+			secondEncrypt = rot(firstEncrypt, +13);
+				
+				//ceaser cipher
+			var cipherKey= $('#offset').val();
+            cipherKey = (cipherKey % alphabet.length);
+				
+				for(i=0; i<secondEncrypt.length; i++){
+					var letter = secondEncrypt[i];
+					var upperLetter = (letter == letter.toUpperCase());
+					letter = letter.toLowerCase();
+    
+					var index = alphabet.indexOf(letter);
+						if(index == -1){
+							finalEncrypt += letter;
+						} 
+						else {
+						index = ((index + cipherKey) + alphabet.length);
+						var nextLetter = fullAlphabet[index];
+						if(upperLetter) 
+						nextLetter = nextLetter.toUpperCase();
+						finalEncrypt += nextLetter;
+						}	
+		   }
+
+
+    
+                 $('#finish').val(finalEncrypt);
+		}
+
+        //decryption
+		function decryption(){
+
+				//Ceaser Cipher
+			var cipherText = $('#finish').val();
+			var cipherKey= $('#offset').val();
+            cipherKey = (cipherKey % alphabet.length);
+			var cipherText2 = '';
+				for(i=0; i<cipherText.length; i++){
+					var letter = cipherText[i];
+					var upperLetter = (letter == letter.toUpperCase());
+						letter = letter.toLowerCase();
+    
+					var index = alphabet.indexOf(letter);
+					if(index == -1){
+						cipherText2 += letter;
+					} 
+					else {
+					index = ((index - cipherKey) + alphabet.length);
+					var nextLetter = fullAlphabet[index];
+					if(upperLetter) 
+					nextLetter = nextLetter.toUpperCase();
+					cipherText2 += nextLetter;
+					}
+				}
+
+							
+		   		//for rotation cipher
+  
+  
+		function rot(s, i) {
+			return s.replace(/[a-zA-Z]/g, function (c) {
+				return String.fromCharCode((c <= 'Z' ? 90 : 122) >= (c = c.charCodeAt(0) + i) ? c : c - 26);
+			});
+		}
+	
+			cipherText2 = rot(cipherText2, +13);
+	
+
+		   // for multiplicative cipher
+	
+	        var decrypttext = '';
+	
+			for(i = 0 ; i < cipherText2.length; i++){
+				var letter = cipherText2[i];
+				var upperLetter = (letter == letter.toUpperCase());
+				letter = letter.toLowerCase();
+		
+				var index = alphabet.indexOf(letter);
+				index = (index * 21) % alphabet.length;
+				var nextLetter = alphabet[index];
+				if(upperLetter)
+				nextLetter = nextLetter.toUpperCase();
+				decrypttext += nextLetter;
+			}
+			$('#decryptText').val(decrypttext);
+        }
+
+</script>
+
+<body>
+<div id="container">
+  <h1>Assignment 2 - Computer and Network Security</h1>
+  <div class="input">
+  <h2>Instructions</h2>
+  <p> 
+  <ul>
+  <br>
+  <li>Enter text you want to encrypt inside the Text: [text box]
+  <br>{space, numbers or any special characters not allowed}<br></li>
+  <li>Enter key Value inside Key [text box] , That should be any number
+  <br></li>
+  <li>Press the Encode button to Encrypt your desired text -  <br>
+  shows the Encrypted text inside the Encrypted: [text box]</li>
+  <br>
+  <li>Press Decode button to Decode the Encrypted text - 
+  <br>shows the Decrypted (Plain text) inside the Decrypted: [text box]</li>
+  <li> while Decoding do not change the Key value</li>
+  <br><br>
+  </ul>
+  </p>
+    <form id="form">
+	<br>
+      Text: 
+      <input type="text" id="plain"/>
+	  &nbsp;&nbsp;&nbsp;&nbsp;
+	  Key: <input type = "number" id = "offset">
+      <br/><br/>
+      Encrypted: <input type="text" id="finish"/>
+      &nbsp;&nbsp;&nbsp;&nbsp;
+      Decrypted: 
+	  <input type = "text" id = "decryptText" >
+      <br><br>
+  	   <input type="button" value="Encode" onclick="runCipher()">
+	   &nbsp;&nbsp;&nbsp;&nbsp;
+	   &nbsp;&nbsp;&nbsp;&nbsp;
+	   &nbsp;&nbsp;&nbsp;&nbsp;
+	   &nbsp;&nbsp;&nbsp;&nbsp;
+	   &nbsp;&nbsp;&nbsp;&nbsp;
+	   &nbsp;&nbsp;&nbsp;&nbsp;
+	   &nbsp;&nbsp;&nbsp;&nbsp;
+	   <input type = "button" value = "Decode" onclick = "decryption()">
+	 <br><br>
+    </form>
+  </div>
+</div>
+</body>
+</html>
